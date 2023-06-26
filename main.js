@@ -3,7 +3,7 @@ const nameInput=document.querySelector('#name');
 const emailInput=document.querySelector('#email');
 const msg=document.querySelector('.msg');
 const userList=document.querySelector('#users');
-console.log('hi')
+//console.log('hi')
 myForm.addEventListener('submit',onSubmit);
 
 function onSubmit(e){
@@ -20,6 +20,7 @@ function onSubmit(e){
         const li=document.createElement('li');
         li.appendChild(document.createTextNode(`${nameInput.value}:${emailInput.value}`));
         userList.appendChild(li);
+        console.log(li)
 
         let myObj = {
             nameObj : nameInput.value,
@@ -27,11 +28,10 @@ function onSubmit(e){
         };
 
         let myObj_serialized = JSON.stringify(myObj);
-        localStorage.setItem('myObj',myObj_serialized);
+        localStorage.setItem(emailInput.value,myObj_serialized);
 
 
-        // localStorage.setItem('name',nameInput.value);
-        // localStorage.setItem('email',emailInput.value);
+
 
         nameInput.value='';
         emailInput.value=''
