@@ -21,8 +21,17 @@ function onSubmit(e){
         li.appendChild(document.createTextNode(`${nameInput.value}:${emailInput.value}`));
         userList.appendChild(li);
 
-        localStorage.setItem('name',nameInput.value);
-        localStorage.setItem('email',emailInput.value);
+        let myObj = {
+            nameObj : nameInput.value,
+            emailObj : emailInput.value
+        };
+
+        let myObj_serialized = JSON.stringify(myObj);
+        localStorage.setItem('myObj',myObj_serialized);
+
+
+        // localStorage.setItem('name',nameInput.value);
+        // localStorage.setItem('email',emailInput.value);
 
         nameInput.value='';
         emailInput.value=''
