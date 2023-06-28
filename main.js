@@ -3,7 +3,8 @@ const nameInput=document.querySelector('#name');
 const emailInput=document.querySelector('#email');
 const msg=document.querySelector('.msg');
 const userList=document.querySelector('#users');
-//console.log('hi')
+
+
 myForm.addEventListener('submit',onSubmit);
 
 function onSubmit(e){
@@ -17,10 +18,23 @@ function onSubmit(e){
     }
     else{
 
+
+
+         //adding the delete button
+        var deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
+        deleteBtn.style.width='2px'
+        deleteBtn.appendChild(document.createTextNode('X'));
+
+
+
         const li=document.createElement('li');
+        li.classList.add('lst');
         li.appendChild(document.createTextNode(`${nameInput.value}:${emailInput.value}`));
+        li.appendChild(deleteBtn);
+
         userList.appendChild(li);
-        console.log(li)
+        //console.log(li)
 
         let myObj = {
             nameObj : nameInput.value,
@@ -37,4 +51,16 @@ function onSubmit(e){
         emailInput.value=''
     }
 
+}
+
+userList.addEventListener('click',delFunc);
+
+function delFunc(e){
+    e.preventDefault();
+    if(e.target.classList.contains('delete')){
+        var li = e.target.parentElement;
+        userList.removeChild(li);
+
+        localStorage.removeItem(emailInput.value);
+    }
 }
