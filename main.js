@@ -18,20 +18,24 @@ function onSubmit(e){
     }
     else{
 
-
-
-         //adding the delete button
+        //adding the delete button
         var deleteBtn = document.createElement('button');
         deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
         deleteBtn.style.width='2px'
         deleteBtn.appendChild(document.createTextNode('X'));
 
 
+        //adding edit button
+        var editBtn = document.createElement('button');
+        editBtn.className = 'edit btn btn-sm float-right';
+        editBtn.style.width = '50px';
+        editBtn.appendChild(document.createTextNode('Edit'));
 
         const li=document.createElement('li');
         li.classList.add('lst');
         li.appendChild(document.createTextNode(`${nameInput.value}:${emailInput.value}`));
         li.appendChild(deleteBtn);
+        li.appendChild(editBtn);
 
         userList.appendChild(li);
         //console.log(li)
@@ -44,23 +48,23 @@ function onSubmit(e){
         let myObj_serialized = JSON.stringify(myObj);
         localStorage.setItem(emailInput.value,myObj_serialized);
 
+          
+          deleteBtn.onclick= () => {
+              localStorage.removeItem(myObj.emailObj);
+              userList.removeChild(li);
+          }
 
-
+          editBtn.onclick = () => {
+            nameInput.value = myObj.nameObj;
+            emailInput.value = myObj.emailObj; 
+            localStorage.removeItem(myObj.emailObj);
+              userList.removeChild(li);
+          }
 
         nameInput.value='';
-        emailInput.value=''
+        emailInput.value='';
+
     }
 
 }
 
-userList.addEventListener('click',delFunc);
-
-function delFunc(e){
-    e.preventDefault();
-    if(e.target.classList.contains('delete')){
-        var li = e.target.parentElement;
-        userList.removeChild(li);
-
-        localStorage.removeItem(emailInput.value);
-    }
-}
