@@ -5,78 +5,22 @@ const msg=document.querySelector('.msg');
 const userList=document.querySelector('#users');
 
 
-var deleteBtn = document.createElement('button');
-deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
-deleteBtn.style.width='2px'
-deleteBtn.appendChild(document.createTextNode('X'));
 
-
-//adding edit button
-var editBtn = document.createElement('button');
-editBtn.className = 'edit btn btn-sm float-right';
-editBtn.style.width = '50px';
-editBtn.appendChild(document.createTextNode('Edit'));
-
-
-myForm.addEventListener('delete',onDelete);
-myForm.addEventListener('edit',onEdit);
-
-function onDelete(e){
-    e.preventDefault();
-    userList.removeChild(li);
-
-}
-
-function onEdit(e){
-    e.preventDefault();
-    let myObj = {
-        nameObj : nameInput.value,
-        emailObj : emailInput.value
-        
-};
-nameInput.value = myObj.nameObj;
-emailInput.value = myObj.emailObj; 
-localStorage.removeItem(myObj.emailObj);
-userList.removeChild(li);
-}
 
 window.addEventListener("DOMContentLoaded", () => {
-    var deleteBtn = document.createElement('button');
-deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
-deleteBtn.style.width='2px'
-deleteBtn.appendChild(document.createTextNode('X'));
-
-
-//adding edit button
-var editBtn = document.createElement('button');
-editBtn.className = 'edit btn btn-sm float-right';
-editBtn.style.width = '50px';
-editBtn.appendChild(document.createTextNode('Edit'));
-
+    
     axios.get("https://crudcrud.com/api/6876f8bce5ed473aa5f7f3c0784d0ad8/AppointData")
          .then((res) => {
             console.log(res);
             for(var i=0; i<res.data.length;i++){
-                const li=document.createElement('li');
-                li.classList.add('lst');
-                li.appendChild(document.createTextNode(`${res.data[i].nameObj}:${res.data[i].emailObj}`));
-                li.appendChild(deleteBtn);
-                li.appendChild(editBtn);
-                userList.appendChild(li);
+                showUserOnScreen(res.data[i]);
             }
          })
-         deleteBtn.onclick= () => {
-           // localStorage.removeItem(myObj.emailObj);
-            userList.removeChild(li);
-        }
-
-        editBtn.onclick = () => {
-          nameInput.value = myObj.nameObj;
-          emailInput.value = myObj.emailObj; 
-          //localStorage.removeItem(myObj.emailObj);
-            userList.removeChild(li);
-        }
 });
+
+
+
+
 
 myForm.addEventListener('submit',onSubmit);
 
@@ -91,37 +35,13 @@ function onSubmit(e){
     }
     else{
 
-        //adding the delete button
-        var deleteBtn = document.createElement('button');
-        deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
-        deleteBtn.style.width='2px'
-        deleteBtn.appendChild(document.createTextNode('X'));
-
-
-        //adding edit button
-        var editBtn = document.createElement('button');
-        editBtn.className = 'edit btn btn-sm float-right';
-        editBtn.style.width = '50px';
-        editBtn.appendChild(document.createTextNode('Edit'));
-
-        const li=document.createElement('li');
-        li.classList.add('lst');
-        li.appendChild(document.createTextNode(`${nameInput.value}:${emailInput.value}`));
-        li.appendChild(deleteBtn);
-        li.appendChild(editBtn);
-
-        userList.appendChild(li);
-        //console.log(li)
-
         let myObj = {
             nameObj : nameInput.value,
             emailObj : emailInput.value
         };
-
-        let myObj_serialized = JSON.stringify(myObj);
-       // localStorage.setItem(emailInput.value,myObj_serialized);
-       //to store in crud and passing http request instead of local storage
-       axios.post("https://crudcrud.com/api/6876f8bce5ed473aa5f7f3c0784d0ad8/AppointData",myObj)
+        console.log(myObj);
+        showUserOnScreen(myObj);
+        axios.post("https://crudcrud.com/api/6876f8bce5ed473aa5f7f3c0784d0ad8/AppointData",myObj)
             .then((response) => {
                 console.log(response)
             })
@@ -130,23 +50,30 @@ function onSubmit(e){
                 console.error(error);
             })
 
-          
-          deleteBtn.onclick= () => {
-              localStorage.removeItem(myObj.emailObj);
-              userList.removeChild(li);
-          }
-
-          editBtn.onclick = () => {
-            nameInput.value = myObj.nameObj;
-            emailInput.value = myObj.emailObj; 
-            localStorage.removeItem(myObj.emailObj);
-              userList.removeChild(li);
-          }
-
         nameInput.value='';
         emailInput.value='';
-
     }
 
 }
 
+function showUserOnScreen(user){
+    console.log(user._id)
+    let parentNode = document.querySelector('#users');
+    let childHTML = `<li id=${user.emailObj}>${user.nameObj}--${user.emailObj}<button onclick = deleteUser('${user._id}','${user.emailObj}')>Delete</button><button onclick = editUser('${user.nameObj}','${user.emailObj}','${user._id}')>Edit</button></li>`;
+    parentNode.innerHTML = parentNode.innerHTML + childHTML;
+};
+
+function deleteUser(id,email){
+    let parentNode = document.querySelector('#users');
+    let childToBeRemoved = document.getElementById(email);
+    parentNode.removeChild(childToBeRemoved);
+    axios.delete(`https://crudcrud.com/api/6876f8bce5ed473aa5f7f3c0784d0ad8/AppointData/${id}`)
+         .then()
+         .catch(err => console.log(err))
+};
+
+function editUser(name, email, id){
+    nameInput.value = name;
+    emailInput.value = email;
+    deleteUser(id);
+};
