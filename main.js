@@ -46,7 +46,16 @@ function onSubmit(e){
         };
 
         let myObj_serialized = JSON.stringify(myObj);
-        localStorage.setItem(emailInput.value,myObj_serialized);
+       // localStorage.setItem(emailInput.value,myObj_serialized);
+       //to store in crud and passing http request instead of local storage
+       axios.post("https://crudcrud.com/api/6876f8bce5ed473aa5f7f3c0784d0ad8/AppointData",myObj)
+            .then((response) => {
+                console.log(response)
+            })
+            .catch((error) => {
+                document.body.innerHTML = document.body.innerHTML + "<h4> Something went wrong</h4>"
+                console.error(error);
+            })
 
           
           deleteBtn.onclick= () => {
