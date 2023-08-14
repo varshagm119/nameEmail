@@ -5,6 +5,79 @@ const msg=document.querySelector('.msg');
 const userList=document.querySelector('#users');
 
 
+var deleteBtn = document.createElement('button');
+deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
+deleteBtn.style.width='2px'
+deleteBtn.appendChild(document.createTextNode('X'));
+
+
+//adding edit button
+var editBtn = document.createElement('button');
+editBtn.className = 'edit btn btn-sm float-right';
+editBtn.style.width = '50px';
+editBtn.appendChild(document.createTextNode('Edit'));
+
+
+myForm.addEventListener('delete',onDelete);
+myForm.addEventListener('edit',onEdit);
+
+function onDelete(e){
+    e.preventDefault();
+    userList.removeChild(li);
+
+}
+
+function onEdit(e){
+    e.preventDefault();
+    let myObj = {
+        nameObj : nameInput.value,
+        emailObj : emailInput.value
+        
+};
+nameInput.value = myObj.nameObj;
+emailInput.value = myObj.emailObj; 
+localStorage.removeItem(myObj.emailObj);
+userList.removeChild(li);
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+    var deleteBtn = document.createElement('button');
+deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
+deleteBtn.style.width='2px'
+deleteBtn.appendChild(document.createTextNode('X'));
+
+
+//adding edit button
+var editBtn = document.createElement('button');
+editBtn.className = 'edit btn btn-sm float-right';
+editBtn.style.width = '50px';
+editBtn.appendChild(document.createTextNode('Edit'));
+
+    axios.get("https://crudcrud.com/api/6876f8bce5ed473aa5f7f3c0784d0ad8/AppointData")
+         .then((res) => {
+            console.log(res);
+            for(var i=0; i<res.data.length;i++){
+                const li=document.createElement('li');
+                li.classList.add('lst');
+                li.appendChild(document.createTextNode(`${res.data[i].nameObj}:${res.data[i].emailObj}`));
+                li.appendChild(deleteBtn);
+                li.appendChild(editBtn);
+                userList.appendChild(li);
+            }
+         })
+         deleteBtn.onclick= () => {
+           // localStorage.removeItem(myObj.emailObj);
+            userList.removeChild(li);
+        }
+
+        editBtn.onclick = () => {
+          nameInput.value = myObj.nameObj;
+          emailInput.value = myObj.emailObj; 
+          //localStorage.removeItem(myObj.emailObj);
+            userList.removeChild(li);
+        }
+});
+
 myForm.addEventListener('submit',onSubmit);
 
 function onSubmit(e){
